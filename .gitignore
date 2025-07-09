@@ -1,0 +1,7 @@
+# Editor settings
+.zed
+.vscode
+.idea
+
+# Environment file
+.env
