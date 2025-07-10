@@ -1,4 +1,4 @@
-# PROJECT: Gooshpera
+# Dater
 Это аналог Airtable на `Go`, `TypeScript` и `SvelteKit`.
 
 ## Технологии
