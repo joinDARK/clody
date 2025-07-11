@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
+	
 	"dater/backend/internal/logger"
 )
 
@@ -9,6 +11,7 @@ func main() {
 	logger.Init()
 	
 	r := gin.New()
+	r.Use(cors.Default())
 	r.Use(logger.GinLogger())
 	
 	r.GET("/ping", func(c *gin.Context) {

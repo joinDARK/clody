@@ -21,6 +21,11 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
-		"axios": "^1.10.0"
+		"@fontsource/fira-code": "^5.2.6",
+		"@fontsource/fira-sans": "^5.2.6",
+		"@fontsource/inter": "^5.2.6",
+		"@tailwindcss/vite": "^4.1.11",
+		"axios": "^1.10.0",
+		"tailwindcss": "^4.1.11"
 	}
 }
