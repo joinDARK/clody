@@ -7,9 +7,9 @@ export const load: PageLoad = async ({params}) => {
     let res: AxiosResponse;
     try {
         res = await axios.get('http://localhost:8080/ping');
-        console.debug(res.data);
+        console.debug("axios.get.data: ", res.data);
     } catch (err) {
-        throw error(404, "Response not found");
+        throw error(500, "Internal Sever Error");
     }
     return res.data;
 }

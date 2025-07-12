@@ -1,8 +1,16 @@
-<script>
+<script lang="ts">
     let { children } = $props();
     import "../app.css";
 </script>
 
-<main class="flex flex-col gap-2 items-center justify-center h-svh bg-neutral-900">
+<main class="screen">
     {@render children()}
 </main>
+
+<style>
+    .screen {
+        width: 100%;
+        height: 100svh;
+        background-color: var(--color-neutral-900);
+    }
+</style>

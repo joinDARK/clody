@@ -2,7 +2,9 @@
     import { page } from "$app/state";
 </script>
 
-<h1 class="text-white error-title">{page.status}: {page.error?.message}</h1>
+<div class="w-full h-full flex items-center justify-center">
+    <h1 class="text-white error-title">{page.status}: {page.error?.message}</h1>
+</div>
 
 <style>
     .error-title {
