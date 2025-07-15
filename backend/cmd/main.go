@@ -1,24 +1,21 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/gin-contrib/cors"
+	"dater/backend/internal/config"
 	
 	"dater/backend/internal/logger"
+	"dater/backend/internal/router"
 )
 
 func main() {
 	logger.Init()
+	// Инициализация конфигурации
+	config, err := config.NewConfig("../configs/config.toml")
+	if err != nil {
+		logger.Log.Error().Msg("Не удалось загрузить конфигурацию: " + err.Error())
+	}
 	
-	r := gin.New()
-	r.Use(cors.Default())
-	r.Use(logger.GinLogger())
-	
-	r.GET("/ping", func(c *gin.Context) {
-		logger.Log.Info().Msg("Ping returned a response, the server is running and connection is successful")
-		c.JSON(200, gin.H{"message": "connection is successful"})
-	})
-	
-	logger.Log.Info().Msg("Server started successfully: http://localhost:8080")
+	r := router.NewRouter(&config.Server)
+	logger.Log.Info().Msg("Starting server: http://localhost:8080")
 	r.Run(":8080")
 }

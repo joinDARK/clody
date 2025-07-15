@@ -1,0 +1,10 @@
+[database]
+host = "localhost"
+port = 5432
+db_name = "dater_db"
+db_user = "dater"
+
+[server]
+host = "localhost"
+port = 8080
+mode = "debug"
