@@ -1,17 +1,12 @@
 package models
 
 type RecordRelation struct {
-	ID             int64 `json:"id"`
-	FieldID        int64 `json:"field_id"`
-	SourceRecordID int64 `json:"source_record_id"`
-	TargetRecordID int64 `json:"target_record_id"`
-}
+	ID             int64 `gorm:"primaryKey;autoIncrement" json:"id"`
+	FieldID        int64 `gorm:"index" json:"field_id"`
+	SourceRecordID int64 `gorm:"not null;index" json:"source_record_id"`
+	TargetRecordID int64 `gorm:"not null;index" json:"target_record_id"`
 
-func NewRecordRelation(id, fieldId, sourceRecordId, targetRecordId int64) *RecordRelation {
-	return &RecordRelation{
-		ID:             id,
-		FieldID:        fieldId,
-		SourceRecordID: sourceRecordId,
-		TargetRecordID: targetRecordId,
-	}
+	Field        *Field `gorm:"foreignKey:FieldID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"field,omitempty"`
+	SourceRecord *Record `gorm:"foreignKey:SourceRecordID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"source_record,omitempty"`
+	TargetRecord *Record `gorm:"foreignKey:TargetRecordID;references:ID;constraint:OnUpdate:SET NULL,OnDelete:CASCADE" json:"target_record,omitempty"`
 }

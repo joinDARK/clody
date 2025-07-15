@@ -1,19 +1,10 @@
 package models
 
 type SelectOption struct {
-	ID       int64  `json:"id"`
-	FieldID  int64  `json:"field_id"`
-	Label    string `json:"label"`
-	Color    string `json:"color"`
-	Position int    `json:"position"`
-}
-
-func NewSelectOption(id, fieldId int64, label string, color string, position int) *SelectOption {
-	return &SelectOption{
-		ID:       id,
-		FieldID:  fieldId,
-		Label:    label,
-		Color:    color,
-		Position: position,
-	}
+	ID       int64  `gorm:"primaryKey;autoIncrement" json:"id"`
+	FieldID  int64  `gorm:"not null;index" json:"field_id"`
+	Label    string `gorm:"size:255;not null" json:"label"`
+	Color    string `gorm:"size:255;not null" json:"color"`
+	Position int    `gorm:"not null" json:"position"`
+	Field    *Field `gorm:"foreignKey:FieldID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"field,omitempty"`
 }

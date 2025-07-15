@@ -5,19 +5,13 @@ import (
 )
 
 type Table struct {
-	Id          int64     `json:"id"`
-	BaseId      int64     `json:"base_id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description,omitempty"`
-	CreatedAt   time.Time `json:"created_at"`
-}
+	ID          int64     `gorm:"primaryKey;autoIncrement" json:"id"`
+	BaseID      int64     `gorm:"not null;index" json:"base_id"`
+	Name        string    `gorm:"size:255;not null" json:"name"`
+	Description *string   `gorm:"type:text" json:"description,omitempty"`
+	CreatedAt   time.Time `gorm:"not null" json:"created_at"`
 
-func NewTable(id, baseId int64, name string, description string) *Table {
-	return &Table{
-		Id:          id,
-		BaseId:      baseId,
-		Name:        name,
-		Description: description,
-		CreatedAt:   time.Now(),
-	}
+	Base    *Base     `gorm:"foreignKey:BaseID;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION" json:"base"`
+	Fields  []*Field  `gorm:"foreignKey:TableID" json:"fields,omitempty"`
+	Records []*Record `gorm:"foreignKey:TableID" json:"records,omitempty"`
 }
