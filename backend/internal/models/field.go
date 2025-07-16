@@ -16,7 +16,7 @@ type Field struct {
 	Options     datatypes.JSON `gorm:"type:jsonb" json:"options,omitempty"`
 	CreatedAt   time.Time      `gorm:"not null" json:"created_at"`
 
-	Table         *Table          `gorm:"foreignKey:TableID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"table"`
+	Table         *Table          `gorm:"foreignKey:TableID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"table"`
 	SelectOptions []*SelectOption `gorm:"foreignKey:FieldID" json:"select_options,omitempty"`
 }
 

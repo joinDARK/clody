@@ -6,5 +6,5 @@ type SelectOption struct {
 	Label    string `gorm:"size:255;not null" json:"label"`
 	Color    string `gorm:"size:255;not null" json:"color"`
 	Position int    `gorm:"not null" json:"position"`
-	Field    *Field `gorm:"foreignKey:FieldID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"field,omitempty"`
+	Field    *Field `gorm:"foreignKey:FieldID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"field,omitempty"`
 }

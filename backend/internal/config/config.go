@@ -7,6 +7,7 @@ import (
 type Config struct {
 	Database Database
 	Server   Server
+	Logger   Logger
 }
 
 type Database struct {
@@ -20,6 +21,10 @@ type Server struct {
 	Host string
 	Port int
 	Mode string
+}
+
+type Logger struct {
+	Level string
 }
 
 func NewConfig(path string) (*Config, error) {

@@ -9,6 +9,6 @@ type Base struct {
 	Name        string    `gorm:"size:255;not null" json:"name"`
 	Description *string   `gorm:"type:text" json:"description,omitempty"`
 	CreatedAt   time.Time `gorm:"not null" json:"created_at"`
-	
-	Tables      []*Table   `gorm:"foreignKey:BaseID" json:"tables,omitempty"`
+
+	Tables []*Table `gorm:"foreignKey:BaseID" json:"tables,omitempty"`
 }
