@@ -3,17 +3,17 @@ package main
 import (
 	"dater/backend/internal/config"
 	"dater/backend/internal/database"
+	"fmt"
 
 	"dater/backend/internal/logger"
 	"dater/backend/internal/router"
 )
 
-func main() {
+func main() {	
 	// Инициализация конфигурации
 	config, err := config.NewConfig("../configs/config.toml")
 	if err != nil {
-		logger.Init(&config.Logger)
-		logger.Log.Error().Msg("Не удалось загрузить конфигурацию: " + err.Error())
+		fmt.Println("\x1b[31mError to initialize config:\x1b[0m " + err.Error())
 		return
 	}
 
