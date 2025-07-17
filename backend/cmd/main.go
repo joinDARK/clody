@@ -3,10 +3,10 @@ package main
 import (
 	"dater/backend/internal/config"
 	"dater/backend/internal/database"
+	"dater/backend/internal/server"
 	"fmt"
 
 	"dater/backend/internal/logger"
-	"dater/backend/internal/router"
 )
 
 func main() {	
@@ -23,17 +23,14 @@ func main() {
 	// Инициализация базы данных
 	db, err := database.NewDB(&config.Database)
 	if err != nil {
-		logger.Log.Error().Msg("Errro to initialize database: " + err.Error())
+		logger.Log.Error().Msg("Error to initialize database: " + err.Error())
 	} else {
 		logger.Log.Info().Msg("Database connected")
 	}
-	_ = db // Временно убираем ошибку линтера UnusedVar
 
 	// Инициализация роутера
-	r := router.NewRouter(&config.Server)
-	logger.Log.Info().Msg("Router is initialized")
+	server := server.NewServer(db, logger.Log)
 	
 	// Запуск сервера
-	r.Run(":8080")
-	logger.Log.Info().Msg("Starting server: http://localhost:8080")
+	server.Start(&config.Server)
 }

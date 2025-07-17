@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"dater/backend/internal/config"
-	"dater/backend/internal/handlers"
 	"dater/backend/internal/logger"
 )
 
@@ -31,13 +30,11 @@ func NewRouter(cfg *config.Server) *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	r.GET("/ping", handlers.Ping)
-
 	logger.Log.Debug().
 		Str("mode", cfg.Mode).
 		Str("host", cfg.Host).
 		Int("port", cfg.Port).
 		Int("routes_count", len(r.Routes())).
-		Msg("Router is initialized")
+		Msg("Router is created")
 	return r
 }
