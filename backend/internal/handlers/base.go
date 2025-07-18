@@ -41,7 +41,7 @@ func CreateBase(db *gorm.DB) gin.HandlerFunc {
 		logger.Log.Debug().Msg("Creating base...")
 
 		var input CreateBaseInput
-		if err := c.ShouldBindJSON(&input); err != nil && err.Error() != "EOF" {
+		if err := c.ShouldBindJSON(&input); err.Error() == "EOF" || err != nil {
 			logger.Log.Error().Err(err).Msg("Failed to bind base")
 			c.JSON(400, gin.H{"error": "Failed to bind base"})
 			return

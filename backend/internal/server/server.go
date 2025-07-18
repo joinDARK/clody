@@ -56,6 +56,13 @@ func (s *Server) InitHandlers(r *gin.Engine) {
 		base.PATCH("/:id", handlers.UpdateBase(s.Database))
 		base.DELETE("/:id", handlers.DeleteBase(s.Database))
 	}
+	{
+		table := r.Group("/tables")
+		table.POST("/", handlers.CreateTable(s.Database))
+		table.GET("/", handlers.GetTable(s.Database))
+		table.PATCH("/:id", handlers.UpdateTable(s.Database))
+		table.DELETE("/:id", handlers.DeleteTable(s.Database))
+	}
 
 	s.Logger.Debug().Int("routes_count", len(r.Routes())).Msg("Router handlers are initialized")
 	s.Logger.Info().Msg("Router handlers are initialized")
