@@ -1,18 +1,25 @@
-package database
+package server
 
 import (
+	"dater/backend/internal/base"
+	"dater/backend/internal/cell"
 	"dater/backend/internal/config"
-	"dater/backend/internal/logger"
-	"dater/backend/internal/models"
+	"dater/backend/internal/field"
+
+	"dater/backend/internal/record"
+	"dater/backend/internal/table"
 	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/rs/zerolog"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func NewDB(cfg *config.Database) (*gorm.DB, error) {
+func NewDB(cfg *config.Database, logger zerolog.Logger) (*gorm.DB, error) {
+	logger.Debug().Msg("Creating new database connection...")
+	
 	// Загружаем переменные окружения
 	err := godotenv.Load("../../.env")
 	if err != nil {
@@ -32,12 +39,12 @@ func NewDB(cfg *config.Database) (*gorm.DB, error) {
 	// Открываем соединение с БД
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		logger.Log.Error().
+		logger.Error().
 			Err(err).
 			Msg("Error connecting to database")
 		return nil, err
 	}
-	logger.Log.Debug().
+	logger.Debug().
 		Str("host", cfg.Host).
 		Str("db_name", cfg.DBName).
 		Str("db_user", cfg.DBUser).
@@ -68,20 +75,22 @@ func NewDB(cfg *config.Database) (*gorm.DB, error) {
 
 	// Миграция базы данных
 	err = db.AutoMigrate(
-		&models.Base{},
-		&models.Table{},
-		&models.Field{},
-		&models.SelectOption{},
-		&models.Record{},
-		&models.Cell{},
-		&models.RecordRelation{},
+		&base.Base{},
+		&table.Table{},
+		&field.Field{},
+		&field.SelectOption{},
+		&record.Record{},
+		&cell.Cell{},
+		&record.RecordRelation{},
 	)
 	if err != nil {
-		logger.Log.Error().
+		logger.Error().
 			Err(err).
 			Msg("Failed to migrate database")
 		return nil, err
 	}
-	logger.Log.Debug().Msg("Migration completed")
+	logger.Debug().Msg("Migration completed")
+	logger.Debug().Msg("Database is created")
+	logger.Info().Msg("Database is created")
 	return db, nil
 }

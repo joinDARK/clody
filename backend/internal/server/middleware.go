@@ -1,13 +1,14 @@
-package logger
+package server
 
 import (
 	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
 )
 
-func GinLogger() gin.HandlerFunc {
+func GinLogger(logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
 
@@ -23,13 +24,13 @@ func GinLogger() gin.HandlerFunc {
 		clientIP := c.ClientIP()
 
 		if status >= 400 {
-			Log.Error().
+			logger.Error().
 				Str("PATH", path).
 				Str("CLIENT_IP", clientIP).
 				Dur("DURATION", duration).
 				Msg(fmt.Sprintf("%s %d", method, status))
 		} else {
-			Log.Info().
+			logger.Info().
 				Str("PATH", path).
 				Str("CLIENT_IP", clientIP).
 				Dur("DURATION", duration).

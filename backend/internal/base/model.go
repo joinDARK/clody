@@ -1,6 +1,7 @@
-package models
+package base
 
 import (
+	"dater/backend/internal/table"
 	"time"
 )
 
@@ -10,5 +11,5 @@ type Base struct {
 	Description *string   `gorm:"type:text" json:"description,omitempty"`
 	CreatedAt   time.Time `gorm:"not null" json:"created_at"`
 
-	Tables []*Table `gorm:"foreignKey:BaseID" json:"tables,omitempty"`
+	Tables []*table.Table `gorm:"foreignKey:BaseID" json:"tables,omitempty"`
 }

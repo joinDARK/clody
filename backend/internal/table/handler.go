@@ -1,11 +1,10 @@
-package handlers
+package table
 
 import (
-	"dater/backend/internal/logger"
-	"dater/backend/internal/models"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
 	"gorm.io/gorm"
 )
 
@@ -21,30 +20,30 @@ type UpdateTableInput struct {
 	Description string `json:"description" binding:"omitempty"`
 }
 
-func GetTable(db *gorm.DB) gin.HandlerFunc {
+func GetTables(db *gorm.DB, logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		logger.Log.Debug().Msg("Getting tables...")
+		logger.Debug().Msg("Getting tables...")
 
-		var table []models.Table
+		var table []Table
 		if err := db.Find(&table).Error; err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to get tables")
+			logger.Error().Err(err).Msg("Failed to get tables")
 			c.JSON(500, gin.H{"error": "Failed to get tables"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Tables retrieved")
-		logger.Log.Info().Msg("Tables retrieved")
+		logger.Debug().Msg("Tables retrieved")
+		logger.Info().Msg("Tables retrieved")
 		c.JSON(200, gin.H{"data": table})
 	}
 }
 
-func CreateTable(db *gorm.DB) gin.HandlerFunc {
+func CreateTable(db *gorm.DB, logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		logger.Log.Debug().Msg("Creating table...")
+		logger.Info().Msg("Creating table...")
 
 		var input CreateTableInput
 		if err := c.ShouldBindJSON(&input); err.Error() == "EOF" || err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to bind table")
+			logger.Error().Err(err).Msg("Failed to bind table")
 			c.JSON(400, gin.H{"error": "Failed to bind table"})
 			return
 		}
@@ -53,46 +52,45 @@ func CreateTable(db *gorm.DB) gin.HandlerFunc {
 			input.Name = "New Table"
 		}
 
-		defaultTable := &models.Table{
+		defaultTable := &Table{
 			BaseID:      input.BaseID,
 			Name:        input.Name,
 			Description: input.Description,
 		}
 
 		if err := db.Create(defaultTable).Error; err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to create table")
+			logger.Error().Err(err).Msg("Failed to create table")
 			c.JSON(500, gin.H{"error": "Failed to create table"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Table created")
-		logger.Log.Info().Msg("Table created")
+		logger.Info().Msg("Table created")
 		c.JSON(201, gin.H{"data": defaultTable})
 	}
 }
 
-func UpdateTable(db *gorm.DB) gin.HandlerFunc {
+func UpdateTable(db *gorm.DB, logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Получаем ID таблицы из пути
 		id := c.Param("id")
 		if id == "" {
-			logger.Log.Error().Msg("Empty ID in URI")
+			logger.Error().Msg("Empty ID in URI")
 			c.JSON(404, gin.H{"error": "Empty ID in URI"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Updating table...")
+		logger.Info().Msg("Updating table...")
 
 		var input UpdateTableInput
 		if err := c.ShouldBindJSON(&input); err != nil && err.Error() != "EOF" {
-			logger.Log.Error().Err(err).Msg("Failed to bind table")
+			logger.Error().Err(err).Msg("Failed to bind table")
 			c.JSON(400, gin.H{"error": "Failed to bind table"})
 			return
 		}
 
 		i, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to parse ID")
+			logger.Error().Err(err).Msg("Failed to parse ID")
 			c.JSON(400, gin.H{"error": "Failed to parse ID"})
 			return
 		}
@@ -106,57 +104,57 @@ func UpdateTable(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		if len(updates) == 0 {
-			logger.Log.Error().Msg("No fields to update")
+			logger.Error().Msg("No fields to update")
 			c.JSON(400, gin.H{"error": "No fields to update"})
 			return
 		}
 
-		if err := db.Model(&models.Table{}).Where("id = ?", i).Updates(updates).Error; err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to update table")
+		if err := db.Model(&Table{}).Where("id = ?", i).Updates(updates).Error; err != nil {
+			logger.Error().Err(err).Msg("Failed to update table")
 			c.JSON(500, gin.H{"error": "Failed to update table"})
 			return
 		}
 
-		var updateTable models.Table
+		var updateTable Table
 		if err := db.First(&updateTable, i).Error; err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to get updated table")
+			logger.Error().Err(err).Msg("Failed to get updated table")
 			c.JSON(500, gin.H{"error": "Failed to get updated table"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Table updated")
-		logger.Log.Info().Msg("Table updated")
+		logger.Debug().Msg("Table updated")
+		logger.Info().Msg("Table updated")
 		c.JSON(205, gin.H{"data": updateTable})
 	}
 }
 
-func DeleteTable(db *gorm.DB) gin.HandlerFunc {
+func DeleteTable(db *gorm.DB, logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Получаем ID базы из пути
 		id := c.Param("id")
 		if id == "" {
-			logger.Log.Error().Msg("Empty ID in URI")
+			logger.Error().Msg("Empty ID in URI")
 			c.JSON(404, gin.H{"error": "Empty ID in URI"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Deleting table...")
+		logger.Debug().Msg("Deleting table...")
 
 		i, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to parse ID")
+			logger.Error().Err(err).Msg("Failed to parse ID")
 			c.JSON(400, gin.H{"error": "Failed to parse ID"})
 			return
 		}
 
-		if err := db.Delete(&models.Table{}, i).Error; err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to delete table")
+		if err := db.Delete(&Table{}, i).Error; err != nil {
+			logger.Error().Err(err).Msg("Failed to delete table")
 			c.JSON(500, gin.H{"error": "Failed to delete table"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Table deleted")
-		logger.Log.Info().Msg("Table deleted")
+		logger.Debug().Msg("Table deleted")
+		logger.Info().Msg("Table deleted")
 		c.JSON(204, gin.H{})
 	}
 }

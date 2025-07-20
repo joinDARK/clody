@@ -2,11 +2,8 @@ package main
 
 import (
 	"dater/backend/internal/config"
-	"dater/backend/internal/database"
 	"dater/backend/internal/server"
 	"fmt"
-
-	"dater/backend/internal/logger"
 )
 
 func main() {	
@@ -17,19 +14,8 @@ func main() {
 		return
 	}
 
-	// Инициализация логгера
-	logger.Init(&config.Logger)
-
-	// Инициализация базы данных
-	db, err := database.NewDB(&config.Database)
-	if err != nil {
-		logger.Log.Error().Msg("Error to initialize database: " + err.Error())
-	} else {
-		logger.Log.Info().Msg("Database connected")
-	}
-
 	// Инициализация роутера
-	server := server.NewServer(db, logger.Log)
+	server := server.NewServer(config)
 	
 	// Запуск сервера
 	server.Start(&config.Server)

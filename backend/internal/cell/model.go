@@ -1,4 +1,4 @@
-package models
+package cell
 
 import (
 	"time"
@@ -13,6 +13,4 @@ type Cell struct {
 	Position  int            `gorm:"not null" json:"position"`
 	Value     datatypes.JSON `gorm:"type:jsonb" json:"value"`
 	CreatedAt time.Time      `gorm:"not null" json:"created_at"`
-	Field     *Field         `gorm:"foreignKey:FieldID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"field,omitempty"`
-	Record    *Record        `gorm:"foreignKey:RecordID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"record,omitempty"`
 }

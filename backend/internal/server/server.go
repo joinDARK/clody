@@ -8,28 +8,40 @@ import (
 	"gorm.io/gorm"
 
 	"dater/backend/internal/config"
-	"dater/backend/internal/handlers"
-	"dater/backend/internal/router"
+	"dater/backend/internal/base"
+	"dater/backend/internal/table"
+	"dater/backend/internal/field"
 )
 
 type Server struct {
 	Router   *gin.Engine
+	Config   config.Config
 	Database *gorm.DB
 	Logger   zerolog.Logger
 }
 
-func NewServer(database *gorm.DB, logger zerolog.Logger) *Server {
+func NewServer(cfg *config.Config) *Server {
+	logger := InitLogger(&cfg.Logger)
+	database, err := NewDB(&cfg.Database, logger)
+	if err != nil {
+		logger.Fatal().Err(err).Msg("Failed to initialize database")
+	}
+	
 	return &Server{
 		Database: database,
 		Logger:   logger,
+		Config:   *cfg,
 	}
 }
 
 func (s *Server) InitRouter(cfg *config.Server) {
 	s.Logger.Debug().Msg("Initializing router...")
-	r := router.NewRouter(cfg)
+
+	
+	r := NewRouter(cfg, s.Logger)
 	s.InitHandlers(r)
 	s.Router = r
+	
 	s.Logger.Debug().Msg("Router is initialized")
 	s.Logger.Info().Msg("Router is initialized")
 }
@@ -48,22 +60,17 @@ func (s *Server) Start(cfg *config.Server) {
 func (s *Server) InitHandlers(r *gin.Engine) {
 	s.Logger.Debug().Msg("Initializing router handlers...")
 
-	r.GET("/ping", handlers.Ping)
-	{
-		base := r.Group("/bases")
-		base.POST("/", handlers.CreateBase(s.Database))
-		base.GET("/", handlers.GetBase(s.Database))
-		base.PATCH("/:id", handlers.UpdateBase(s.Database))
-		base.DELETE("/:id", handlers.DeleteBase(s.Database))
-	}
-	{
-		table := r.Group("/tables")
-		table.POST("/", handlers.CreateTable(s.Database))
-		table.GET("/", handlers.GetTable(s.Database))
-		table.PATCH("/:id", handlers.UpdateTable(s.Database))
-		table.DELETE("/:id", handlers.DeleteTable(s.Database))
-	}
+	r.GET("/ping", s.Ping)
+	
+	base.InitBaseRoutes(r, s.Database, s.Logger)
+	table.InitTableRoutes(r, s.Database, s.Logger)
+	field.InitFieldRoutes(r, s.Database, s.Logger)
 
 	s.Logger.Debug().Int("routes_count", len(r.Routes())).Msg("Router handlers are initialized")
 	s.Logger.Info().Msg("Router handlers are initialized")
+}
+
+func (s *Server) Ping(c *gin.Context) {
+	s.Logger.Info().Msg("Ping returned a response, the server is running and connection is successful")
+	c.JSON(200, gin.H{"message": "connection is successful"})
 }

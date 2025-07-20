@@ -1,4 +1,4 @@
-package logger
+package server
 
 import (
 	"dater/backend/internal/config"
@@ -8,10 +8,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// Объект логера
-var Log zerolog.Logger
-
-func Init(cfg *config.Logger) {
+func InitLogger(cfg *config.Logger) zerolog.Logger {
 	// Формируем вывод логера в консоль
 	output := zerolog.ConsoleWriter{
 		Out:        os.Stdout,
@@ -53,5 +50,5 @@ func Init(cfg *config.Logger) {
 	}
 
 	// Инициализируем объект логера
-	Log = zerolog.New(output).With().Timestamp().Logger()
+	return zerolog.New(output).With().Timestamp().Logger()
 }

@@ -1,11 +1,10 @@
-package handlers
+package base
 
 import (
-	"dater/backend/internal/logger"
-	"dater/backend/internal/models"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
 	"gorm.io/gorm"
 )
 
@@ -19,30 +18,30 @@ type UpdateBaseInput struct {
 	Description string `json:"description" binding:"omitempty"`
 }
 
-func GetBase(db *gorm.DB) gin.HandlerFunc {
+func GetBases(db *gorm.DB, logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		logger.Log.Debug().Msg("Getting base...")
+		logger.Debug().Msg("Getting base...")
 
-		var base []models.Base
+		var base []Base
 		if err := db.Find(&base).Error; err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to get base")
+			logger.Error().Err(err).Msg("Failed to get base")
 			c.JSON(500, gin.H{"error": "Failed to get base"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Base retrieved")
-		logger.Log.Info().Msg("Base retrieved")
+		logger.Debug().Msg("Bases retrieved")
+		logger.Info().Msg("Bases retrieved")
 		c.JSON(200, gin.H{"data": base})
 	}
 }
 
-func CreateBase(db *gorm.DB) gin.HandlerFunc {
+func CreateBase(db *gorm.DB, logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		logger.Log.Debug().Msg("Creating base...")
+		logger.Debug().Msg("Creating base...")
 
 		var input CreateBaseInput
 		if err := c.ShouldBindJSON(&input); err.Error() == "EOF" || err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to bind base")
+			logger.Error().Err(err).Msg("Failed to bind base")
 			c.JSON(400, gin.H{"error": "Failed to bind base"})
 			return
 		}
@@ -51,45 +50,45 @@ func CreateBase(db *gorm.DB) gin.HandlerFunc {
 			input.Name = "Default"
 		}
 
-		defaultBase := &models.Base{
+		defaultBase := &Base{
 			Name:        input.Name,
 			Description: input.Description,
 		}
 
 		if err := db.Create(defaultBase).Error; err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to create base")
+			logger.Error().Err(err).Msg("Failed to create base")
 			c.JSON(500, gin.H{"error": "Failed to create base"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Base created")
-		logger.Log.Info().Msg("Base created")
+		logger.Debug().Msg("Base created")
+		logger.Info().Msg("Base created")
 		c.JSON(201, gin.H{"data": defaultBase})
 	}
 }
 
-func UpdateBase(db *gorm.DB) gin.HandlerFunc {
+func UpdateBase(db *gorm.DB, logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Получаем ID пользователя из пути
 		id := c.Param("id")
 		if id == "" {
-			logger.Log.Error().Msg("Empty ID in URI")
+			logger.Error().Msg("Empty ID in URI")
 			c.JSON(404, gin.H{"error": "Empty ID in URI"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Updating base...")
+		logger.Debug().Msg("Updating base...")
 
 		var input UpdateBaseInput
 		if err := c.ShouldBindJSON(&input); err != nil && err.Error() != "EOF" {
-			logger.Log.Error().Err(err).Msg("Failed to bind base")
+			logger.Error().Err(err).Msg("Failed to bind base")
 			c.JSON(400, gin.H{"error": "Failed to bind base"})
 			return
 		}
 
 		i, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to parse ID")
+			logger.Error().Err(err).Msg("Failed to parse ID")
 			c.JSON(400, gin.H{"error": "Failed to parse ID"})
 			return
 		}
@@ -103,57 +102,57 @@ func UpdateBase(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		if len(updates) == 0 {
-			logger.Log.Error().Msg("No fields to update")
+			logger.Error().Msg("No fields to update")
 			c.JSON(400, gin.H{"error": "No fields to update"})
 			return
 		}
 
-		if err := db.Model(&models.Base{}).Where("id = ?", i).Updates(updates).Error; err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to update base")
+		if err := db.Model(&Base{}).Where("id = ?", i).Updates(updates).Error; err != nil {
+			logger.Error().Err(err).Msg("Failed to update base")
 			c.JSON(500, gin.H{"error": "Failed to update base"})
 			return
 		}
 		
-		var updateBase models.Base
+		var updateBase Base
 		if err := db.First(&updateBase, i).Error; err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to get updated base")
+			logger.Error().Err(err).Msg("Failed to get updated base")
 			c.JSON(500, gin.H{"error": "Failed to get updated base"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Base updated")
-		logger.Log.Info().Msg("Base updated")
+		logger.Debug().Msg("Base updated")
+		logger.Info().Msg("Base updated")
 		c.JSON(205, gin.H{"data": updateBase})
 	}
 }
 
-func DeleteBase(db *gorm.DB) gin.HandlerFunc {
+func DeleteBase(db *gorm.DB, logger zerolog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Получаем ID базы из пути
 		id := c.Param("id")
 		if id == "" {
-			logger.Log.Error().Msg("Empty ID in URI")
+			logger.Error().Msg("Empty ID in URI")
 			c.JSON(404, gin.H{"error": "Empty ID in URI"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Deleting base...")
+		logger.Debug().Msg("Deleting base...")
 
 		i, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to parse ID")
+			logger.Error().Err(err).Msg("Failed to parse ID")
 			c.JSON(400, gin.H{"error": "Failed to parse ID"})
 			return
 		}
 
-		if err := db.Delete(&models.Base{}, i).Error; err != nil {
-			logger.Log.Error().Err(err).Msg("Failed to delete base")
+		if err := db.Delete(&Base{}, i).Error; err != nil {
+			logger.Error().Err(err).Msg("Failed to delete base")
 			c.JSON(500, gin.H{"error": "Failed to delete base"})
 			return
 		}
 
-		logger.Log.Debug().Msg("Base deleted")
-		logger.Log.Info().Msg("Base deleted")
+		logger.Debug().Msg("Base deleted")
+		logger.Info().Msg("Base deleted")
 		c.JSON(204, gin.H{})
 	}
 }

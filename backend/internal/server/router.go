@@ -1,40 +1,43 @@
-package router
+package server
 
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
 
 	"dater/backend/internal/config"
-	"dater/backend/internal/logger"
 )
 
-func NewRouter(cfg *config.Server) *gin.Engine {
+func NewRouter(cfg *config.Server, logger zerolog.Logger) *gin.Engine {
+	logger.Debug().Msg("Creating router...")
+	
 	if cfg == nil {
-		logger.Log.Error().Msg("Config is nil")
+		logger.Error().Msg("Config is nil")
 	}
 	if cfg.Host == "" {
-		logger.Log.Error().Msg("Config variable host is empty")
+		logger.Error().Msg("Config variable host is empty")
 	}
 	if cfg.Port == 0 {
-		logger.Log.Error().Msg("Config variable port == 0")
+		logger.Error().Msg("Config variable port == 0")
 	}
 	if cfg.Mode == "" {
-		logger.Log.Error().Msg("Config variable mode is empty")
+		logger.Error().Msg("Config variable mode is empty")
 	}
 
 	r := gin.New()
 	r.Use(cors.Default())
-	r.Use(logger.GinLogger())
+	r.Use(GinLogger(logger))
 
 	if cfg.Mode == "release" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	logger.Log.Debug().
+	logger.Debug().
 		Str("mode", cfg.Mode).
 		Str("host", cfg.Host).
 		Int("port", cfg.Port).
 		Int("routes_count", len(r.Routes())).
 		Msg("Router is created")
+	logger.Info().Msg("Router is created")
 	return r
 }
