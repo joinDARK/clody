@@ -71,3 +71,7 @@ field.type = 'multiselect', то cell.value = { "option_ids": [17, 22, 34] }
 field.type = 'Many2One', то cell.value = { "relation_id": 1 }
 field.type = 'One2Many', то cell.value = { "relation_ids": [1, 2, 3] }
 field.type = 'Many2Many', то cell.value = { "relation_ids": [1, 2, 3] }
+
+В domain хранятся модели для бд
+В repo находятся интерфейсы методов для работы с моделью.
+В handlers находятся реализации интерфейсов из repo. Это объект с обработчиками для роутера.
