@@ -65,3 +65,9 @@
    ```bash
    go run main.go
    ```
+
+field.type = 'single select', то cell.value = { "option_id": 17 }
+field.type = 'multiselect', то cell.value = { "option_ids": [17, 22, 34] }
+field.type = 'Many2One', то cell.value = { "relation_id": 1 }
+field.type = 'One2Many', то cell.value = { "relation_ids": [1, 2, 3] }
+field.type = 'Many2Many', то cell.value = { "relation_ids": [1, 2, 3] }

@@ -1,10 +1,7 @@
-package table
+package domain
 
 import (
 	"time"
-
-	"dater/backend/internal/field"
-	"dater/backend/internal/record"
 )
 
 type Table struct {
@@ -14,6 +11,7 @@ type Table struct {
 	Description *string   `gorm:"type:text" json:"description,omitempty"`
 	CreatedAt   time.Time `gorm:"not null" json:"created_at"`
 
-	Fields  []*field.Field   `gorm:"foreignKey:TableID" json:"fields,omitempty"`
-	Records []*record.Record  `gorm:"foreignKey:TableID" json:"records,omitempty"`
+	Fields  []*Field   `gorm:"foreignKey:TableID" json:"fields,omitempty"`
+	Records []*Record  `gorm:"foreignKey:TableID" json:"records,omitempty"`
+	Base    *Base      `gorm:"foreignKey:BaseID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"base,omitempty"`
 }

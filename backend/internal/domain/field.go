@@ -1,4 +1,4 @@
-package field
+package domain
 
 import (
 	"time"
@@ -16,16 +16,8 @@ type Field struct {
 	Options     datatypes.JSON `gorm:"type:jsonb" json:"options,omitempty"`
 	CreatedAt   time.Time      `gorm:"not null" json:"created_at"`
 
+	Table         *Table          `gorm:"foreignKey:TableID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"table"`
 	SelectOptions []*SelectOption `gorm:"foreignKey:FieldID" json:"select_options,omitempty"`
-}
-
-type SelectOption struct {
-	ID       int64  `gorm:"primaryKey;autoIncrement" json:"id"`
-	FieldID  int64  `gorm:"not null;index" json:"field_id"`
-	Label    string `gorm:"size:255;not null" json:"label"`
-	Color    string `gorm:"size:255;not null" json:"color"`
-	Position int    `gorm:"not null" json:"position"`
-	Field    *Field `gorm:"foreignKey:FieldID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"field,omitempty"`
 }
 
 type FieldType string
