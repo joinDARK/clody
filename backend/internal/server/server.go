@@ -8,9 +8,6 @@ import (
 	"gorm.io/gorm"
 
 	"dater/backend/internal/config"
-	"dater/backend/internal/base"
-	"dater/backend/internal/table"
-	"dater/backend/internal/field"
 )
 
 type Server struct {

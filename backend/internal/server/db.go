@@ -1,13 +1,8 @@
 package server
 
 import (
-	"dater/backend/internal/base"
-	"dater/backend/internal/cell"
 	"dater/backend/internal/config"
-	"dater/backend/internal/field"
-
-	"dater/backend/internal/record"
-	"dater/backend/internal/table"
+	"dater/backend/internal/domain"
 	"fmt"
 	"os"
 
@@ -75,13 +70,13 @@ func NewDB(cfg *config.Database, logger zerolog.Logger) (*gorm.DB, error) {
 
 	// Миграция базы данных
 	err = db.AutoMigrate(
-		&base.Base{},
-		&table.Table{},
-		&field.Field{},
-		&field.SelectOption{},
-		&record.Record{},
-		&cell.Cell{},
-		&record.RecordRelation{},
+		&domain.Base{},
+		&domain.Table{},
+		&domain.Field{},
+		&domain.SelectOption{},
+		&domain.Record{},
+		&domain.Cell{},
+		&domain.RecordRelation{},
 	)
 	if err != nil {
 		logger.Error().
