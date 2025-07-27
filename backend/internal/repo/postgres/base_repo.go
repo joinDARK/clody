@@ -18,23 +18,19 @@ func NewPostgresBaseRepo(db *gorm.DB) repo.BaseRepo {
 }
 
 func (r *postgresBaseRepo) GetByID(id int64) (*domain.Base, error) {
-	var entity domain.Base
-	if err := r.db.First(&entity, id).Error; err != nil {
-		return nil, err
-	}
-	return &entity, nil
+	var base domain.Base
+	err := r.db.First(&base, id).Error
+	return &base, err
 }
 
 func (r *postgresBaseRepo) Create(base *domain.Base) error {
 	return r.db.Create(base).Error
 }
 
-func (r *postgresBaseRepo) Read() ([]*domain.Base, error) {
-	var bases []*domain.Base
-	if err := r.db.Find(&bases).Error; err != nil {
-		return nil, err
-	}
-	return bases, nil
+func (r *postgresBaseRepo) GetAllTables(baseID int64) ([]*domain.Table, error) {
+	var tables []*domain.Table
+	err := r.db.Where("base_id = ?", baseID).Find(&tables).Error;
+	return tables, err
 }
 
 func (r *postgresBaseRepo) Update(base *domain.Base) error {

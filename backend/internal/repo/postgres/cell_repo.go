@@ -17,12 +17,22 @@ func NewPostgresCellRepo(db *gorm.DB) repo.CellRepo {
 	}
 }
 
+func (r *postgresCellRepo) GetAllCellsByRecordID(recordID int64) ([]*domain.Cell, error) {
+	var cells []*domain.Cell
+    err := r.db.Where("record_id = ?", recordID).Find(&cells).Error
+    return cells, err
+}
+
+func (r *postgresCellRepo) GetAllCellsByFieldID(fieldID int64) ([]*domain.Cell, error) {
+	var cells []*domain.Cell
+    err := r.db.Where("field_id = ?", fieldID).Find(&cells).Error
+    return cells, err
+}
+
 func (r *postgresCellRepo) GetByID(id int64) (*domain.Cell, error) {
 	var cell domain.Cell
-	if err := r.db.Where("id = ?", id).First(&cell).Error; err != nil {
-		return nil, err
-	}
-	return &cell, nil
+	err := r.db.Where("id = ?", id).First(&cell).Error
+	return &cell, err
 }
 
 func (r *postgresCellRepo) Create(cell *domain.Cell) error {
