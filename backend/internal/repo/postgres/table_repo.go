@@ -41,14 +41,17 @@ func (r *postgresTableRepo) GetByID(id int64) (*domain.Table, error) {
 	return &table, err
 }
 
-func (r *postgresTableRepo) Create(table *domain.Table) error {
-	return r.db.Create(table).Error
+func (r *postgresTableRepo) Create(table *domain.Table) (*domain.Table, error) {
+	err := r.db.Create(table).Error
+	return table, err
 }
 
-func (r *postgresTableRepo) Update(table *domain.Table) error {
-	return r.db.Save(table).Error
+func (r *postgresTableRepo) Update(table *domain.Table) (*domain.Table, error) {
+	err := r.db.Save(table).Error
+	return table, err
 }
 
-func (r *postgresTableRepo) Delete(id int64) error {
-	return r.db.Delete(&domain.Table{}, id).Error
+func (r *postgresTableRepo) Delete(id int64) (int64, error) {
+	err := r.db.Delete(&domain.Table{}, id).Error
+	return id, err
 }

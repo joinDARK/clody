@@ -23,8 +23,9 @@ func (r *postgresBaseRepo) GetByID(id int64) (*domain.Base, error) {
 	return &base, err
 }
 
-func (r *postgresBaseRepo) Create(base *domain.Base) error {
-	return r.db.Create(base).Error
+func (r *postgresBaseRepo) Create(base *domain.Base) (*domain.Base, error) {
+	err := r.db.Create(base).Error
+	return base, err
 }
 
 func (r *postgresBaseRepo) GetAllTables(baseID int64) ([]*domain.Table, error) {
@@ -33,10 +34,12 @@ func (r *postgresBaseRepo) GetAllTables(baseID int64) ([]*domain.Table, error) {
 	return tables, err
 }
 
-func (r *postgresBaseRepo) Update(base *domain.Base) error {
-	return r.db.Save(base).Error
+func (r *postgresBaseRepo) Update(base *domain.Base) (*domain.Base, error) {
+	err := r.db.Save(base).Error
+	return base, err
 }
 
-func (r *postgresBaseRepo) Delete(id int64) error {
-	return r.db.Delete(&domain.Base{}, id).Error
+func (r *postgresBaseRepo) Delete(id int64) (deleteID int64, err error) {
+	err = r.db.Delete(&domain.Base{}, id).Error
+	return id, err
 }

@@ -3,20 +3,18 @@ package repo
 import "dater/backend/internal/domain"
 
 type BaseRepo interface {
-	Create(base *domain.Base) error
-	Update(base *domain.Base) error
-	Delete(id int64) error
+	Create(base *domain.Base) (*domain.Base, error)
+	Update(base *domain.Base) (*domain.Base, error)
+	Delete(id int64) (int64, error)
 	GetByID(id int64) (*domain.Base, error)
-
 	GetAllTables(baseID int64) ([]*domain.Table, error)
 }
 
 type TableRepo interface {
-	Create(table *domain.Table) error
+	Create(table *domain.Table) (*domain.Table, error)
 	GetByID(id int64) (*domain.Table, error)
-	Update(table *domain.Table) error
-	Delete(id int64) error
-
+	Update(table *domain.Table) (*domain.Table, error)
+	Delete(id int64) (int64, error)
 	GetAllTablesByBase(baseID int64) ([]*domain.Table, error)
 	GetAllRecords(tableID int64) ([]*domain.Record, error)
 	GetAllFields(tableID int64) ([]*domain.Field, error)
@@ -27,7 +25,6 @@ type RecordRepo interface {
 	GetByID(id int64) (*domain.Record, error)
 	Update(record *domain.Record) error
 	Delete(id int64) error
-
 	GetAllRecordsByTable(tableID int64) ([]*domain.Record, error)
 	GetAllRecordsBySourceID(recordID int64) ([]*domain.Record, error)
 	GetAllRecordsByTargetID(recordID int64) ([]*domain.Record, error)
@@ -39,7 +36,6 @@ type RecordRelationRepo interface {
 	GetByID(id int64) (*domain.RecordRelation, error)
 	Update(recordRelation *domain.RecordRelation) error
 	Delete(id int64) error
-
 	GetAllRecordsBySourceID(recordID int64) ([]*domain.Record, error)
 	GetAllRecordsByTargetID(recordID int64) ([]*domain.Record, error)
 	GetAllFields(fieldID int64) ([]*domain.Field, error)
@@ -50,7 +46,6 @@ type FieldRepo interface {
 	GetByID(id int64) (*domain.Field, error)
 	Update(field *domain.Field) error
 	Delete(id int64) error
-
 	GetAllFieldsByTable(tableID int64) ([]*domain.Field, error)
 	GetAllRelationsRecords(fieldID int64) ([]*domain.Record, error)
 	GetAllCells(fieldID int64) ([]*domain.Cell, error)
@@ -62,7 +57,6 @@ type CellRepo interface {
 	GetByID(id int64) (*domain.Cell, error)
 	Update(cell *domain.Cell) error
 	Delete(id int64) error
-	
 	GetAllCellsByRecordID(recordID int64) ([]*domain.Cell, error)
 	GetAllCellsByFieldID(fieldID int64) ([]*domain.Cell, error)
 }
