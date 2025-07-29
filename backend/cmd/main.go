@@ -18,5 +18,5 @@ func main() {
 	server := server.NewServer(config)
 	
 	// Запуск сервера
-	server.Start(&config.Server)
+	server.Start()
 }
