@@ -21,6 +21,11 @@ func NewBaseService(repo repo.BaseRepo) *BaseService {
 func (s *BaseService) GetBaseInfo(id int64, logger zerolog.Logger) (*domain.Base, error) {
 	logger.Debug().Msg("[GetBaseInfo] Getting base info...")
 	
+	if id <= 0 {
+		logger.Error().Msg("[GetBaseInfo] ID cannot be less than or equal to 0")
+		return nil, errors.New("ID cannot be less than or equal to 0")
+	}
+	
 	base, err := s.repo.GetByID(id)
 	if err != nil {
 		logger.Error().Err(err).Msg("[GetBaseInfo] Failed to get base info")
@@ -60,9 +65,9 @@ func (s *BaseService) CreateBase(name string, desc *string, logger zerolog.Logge
 func (s *BaseService) UpdateBase(id int64, name string, desc *string, logger zerolog.Logger) (*domain.Base, error) {
 	logger.Debug().Msg("[UpdateBase] Updating base...")
 	
-	if id == 0 {
-		logger.Error().Msg("[UpdateBase] ID cannot be 0")
-		return nil, errors.New("ID cannot be 0")
+	if id <= 0 {
+		logger.Error().Msg("[UpdateBase] ID cannot be less than or equal to 0")
+		return nil, errors.New("ID cannot be less than or equal to 0")
 	}
 	
 	if name == "" {
@@ -70,16 +75,33 @@ func (s *BaseService) UpdateBase(id int64, name string, desc *string, logger zer
 		return nil, errors.New("Name cannot be empty")
 	}
 	
-	base, err := s.repo.Update(&domain.Base{ID: id, Name: name, Description: desc})
+	// FIXME: Улучшить обновление данных
+	base, err := s.GetBaseInfo(id, logger)
+	if err != nil {
+		logger.Error().Err(err).Msg("[UpdateBase] Base not found")
+		return nil, err
+	}
+	
+	base.Name = name
+	if desc != nil {
+		base.Description = desc
+	}
+	
+	base, err = s.repo.Update(base)
 	if err != nil {
 		logger.Error().Err(err).Msg("[UpdateBase] Failed to update base")
 		return nil, err
 	}
 	
+	descLog := ""
+	if base.Description != nil {
+	    descLog = *base.Description
+	}
+	
 	logger.Debug().
 		Int64("ID", base.ID).
 		Str("Name", base.Name).
-		Str("Description", *base.Description).
+		Str("Description", descLog).
 		Msg("[UpdateBase] Base updated:")
 	return base, nil
 }
@@ -102,4 +124,25 @@ func (s *BaseService) DeleteBase(id int64, logger zerolog.Logger) (int64, error)
 		Int64("ID", deleteID).
 		Msg("[DeleteBase] Base deleted:")
 	return deleteID, nil
+}
+
+func (s *BaseService) GetBaseTables(id int64, logger zerolog.Logger) ([]*domain.Table, error) {
+	logger.Debug().Msg("[GetBaseTables] Getting base tables...")
+	
+	if id <= 0 {
+		logger.Error().Msg("[UpdateBase] ID cannot be less than or equal to 0")
+		return nil, errors.New("ID cannot be less than or equal to 0")
+	}
+	
+	baseTables, err := s.repo.GetAllTables(id)
+	if err != nil {
+		logger.Error().Err(err).Msg("[GetBaseTables] Failed to get base tables")
+		return nil, err
+	}
+	
+	logger.Debug().
+		Int64("ID", id).
+		Int("Count", len(baseTables)).
+		Msg("[GetBaseTables] Base tables retrieved:")
+	return baseTables, nil
 }

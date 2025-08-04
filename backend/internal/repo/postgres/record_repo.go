@@ -19,12 +19,6 @@ func (r *postgresRecordRepo) Create(record *domain.Record) error {
 	return r.db.Create(record).Error
 }
 
-func (r *postgresRecordRepo) GetAllRecordsByTable(tableID int64) ([]*domain.Record, error) {
-	var records []*domain.Record
-	err := r.db.Where("table_id = ?", tableID).Find(&records).Error
-	return records, err
-}
-
 func (r *postgresRecordRepo) GetAllRecordsBySourceID(recordID int64) ([]*domain.Record, error) {
 	var relations []domain.RecordRelation
 	err := r.db.Where("source_record_id = ?", recordID).Find(&relations).Error
@@ -69,8 +63,8 @@ func (r *postgresRecordRepo) GetAllRecordsByTargetID(recordID int64) ([]*domain.
 
 func (r *postgresRecordRepo) GetAllCells(recordID int64) ([]*domain.Cell, error) {
 	var cells []*domain.Cell
-    err := r.db.Where("record_id = ?", recordID).Find(&cells).Error
-    return cells, err
+	err := r.db.Where("record_id = ?", recordID).Find(&cells).Error
+	return cells, err
 }
 
 func (r *postgresRecordRepo) GetByID(id int64) (*domain.Record, error) {

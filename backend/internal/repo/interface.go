@@ -15,7 +15,6 @@ type TableRepo interface {
 	GetByID(id int64) (*domain.Table, error)
 	Update(table *domain.Table) (*domain.Table, error)
 	Delete(id int64) (int64, error)
-	GetAllTablesByBase(baseID int64) ([]*domain.Table, error)
 	GetAllRecords(tableID int64) ([]*domain.Record, error)
 	GetAllFields(tableID int64) ([]*domain.Field, error)
 }
@@ -25,7 +24,6 @@ type RecordRepo interface {
 	GetByID(id int64) (*domain.Record, error)
 	Update(record *domain.Record) error
 	Delete(id int64) error
-	GetAllRecordsByTable(tableID int64) ([]*domain.Record, error)
 	GetAllRecordsBySourceID(recordID int64) ([]*domain.Record, error)
 	GetAllRecordsByTargetID(recordID int64) ([]*domain.Record, error)
 	GetAllCells(recordID int64) ([]*domain.Cell, error)
@@ -45,8 +43,7 @@ type FieldRepo interface {
 	Create(field *domain.Field) error
 	GetByID(id int64) (*domain.Field, error)
 	Update(field *domain.Field) error
-	Delete(id int64) error
-	GetAllFieldsByTable(tableID int64) ([]*domain.Field, error)
+	Delete(id int64) (int64, error)
 	GetAllRelationsRecords(fieldID int64) ([]*domain.Record, error)
 	GetAllCells(fieldID int64) ([]*domain.Cell, error)
 	GetAllSelectOptions(fieldID int64) ([]*domain.SelectOption, error)

@@ -17,12 +17,6 @@ func NewPostgresTableRepo(db *gorm.DB) repo.TableRepo {
 	}
 }
 
-func (r *postgresTableRepo) GetAllTablesByBase(baseID int64) ([]*domain.Table, error) {
-	var tables []*domain.Table
-	err := r.db.Where("base_id = ?", baseID).Find(&tables).Error
-	return tables, err
-}
-
 func (r *postgresTableRepo) GetAllRecords(tableID int64) ([]*domain.Record, error) {
 	var records []*domain.Record
 	err := r.db.Where("table_id = ?", tableID).Find(&records).Error
