@@ -11,7 +11,7 @@ type postgresRecordRepo struct {
 	db *gorm.DB
 }
 
-func NewRecordRepo(db *gorm.DB) repo.RecordRepo {
+func NewPostgresRecordRepo(db *gorm.DB) repo.RecordRepo {
 	return &postgresRecordRepo{db: db}
 }
 

@@ -11,7 +11,7 @@ type postgresFieldRepo struct {
 	db *gorm.DB
 }
 
-func NewFieldRepo(db *gorm.DB) repo.FieldRepo {
+func NewPostgresFieldRepo(db *gorm.DB) repo.FieldRepo {
 	return &postgresFieldRepo{db: db}
 }
 

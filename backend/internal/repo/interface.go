@@ -34,9 +34,9 @@ type RecordRelationRepo interface {
 	GetByID(id int64) (*domain.RecordRelation, error)
 	Update(recordRelation *domain.RecordRelation) error
 	Delete(id int64) error
-	GetAllRecordsBySourceID(recordID int64) ([]*domain.Record, error)
-	GetAllRecordsByTargetID(recordID int64) ([]*domain.Record, error)
-	GetAllFields(fieldID int64) ([]*domain.Field, error)
+	GetBySourceRecordID(recordID int64) ([]*domain.RecordRelation, error)
+	GetByTargetRecordID(recordID int64) ([]*domain.RecordRelation, error)
+	GetByFieldID(fieldID int64) ([]*domain.RecordRelation, error)
 }
 
 type FieldRepo interface {
@@ -63,4 +63,5 @@ type SelectOptionRepo interface {
 	GetByID(id int64) (*domain.SelectOption, error)
 	Update(selectOption *domain.SelectOption) error
 	Delete(id int64) error
+	GetAllByFieldID(fieldID int64) ([]*domain.SelectOption, error)
 }

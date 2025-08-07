@@ -6,7 +6,6 @@ import (
 	"dater/backend/internal/service"
 	"dater/backend/internal/transport/api/handlers"
 
-	// "gorm.io/gorm"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
@@ -56,6 +55,61 @@ func SetupRouter(cfg *config.Server, logger zerolog.Logger, db *gorm.DB) *gin.En
 		table.POST("/", handlers.CreateTableHandler(tableService, logger))
 		table.PATCH("/:id", handlers.UpdateTableHandler(tableService, logger))
 		table.DELETE("/:id", handlers.DeleteTableHandler(tableService, logger))
+	}
+
+	{
+		fieldRepo := postgres.NewPostgresFieldRepo(db)
+		fieldService := service.NewFieldService(fieldRepo)
+
+		field := apiGroup.Group("/fields")
+		field.GET("/:id", handlers.GetFieldByIDHandler(fieldService, logger))
+		field.POST("/", handlers.CreateFieldHandler(fieldService, logger))
+		field.PATCH("/:id", handlers.UpdateFieldHandler(fieldService, logger))
+		field.DELETE("/:id", handlers.DeleteFieldHandler(fieldService, logger))
+	}
+
+	{
+		recordRepo := postgres.NewPostgresRecordRepo(db)
+		recordService := service.NewRecordService(recordRepo)
+
+		record := apiGroup.Group("/records")
+		record.GET("/:id", handlers.GetRecordByIDHandler(recordService, logger))
+		record.POST("/", handlers.CreateRecordHandler(recordService, logger))
+		record.PATCH("/:id", handlers.UpdateRecordHandler(recordService, logger))
+		record.DELETE("/:id", handlers.DeleteRecordHandler(recordService, logger))
+	}
+
+	{
+		cellRepo := postgres.NewPostgresCellRepo(db)
+		cellService := service.NewCellService(cellRepo)
+
+		cell := apiGroup.Group("/cells")
+		cell.GET("/:id", handlers.GetCellByIDHandler(cellService, logger))
+		cell.POST("/", handlers.CreateCellHandler(cellService, logger))
+		cell.PATCH("/:id", handlers.UpdateCellHandler(cellService, logger))
+		cell.DELETE("/:id", handlers.DeleteCellHandler(cellService, logger))
+	}
+
+	{
+		recordRelationRepo := postgres.NewRecordRelationRepo(db)
+		recordRelationService := service.NewRecordRelationService(recordRelationRepo)
+
+		recordRelation := apiGroup.Group("/record_relations")
+		recordRelation.GET("/:id", handlers.GetRecordRelationByIDHandler(recordRelationService, logger))
+		recordRelation.POST("/", handlers.CreateRecordRelationHandler(recordRelationService, logger))
+		recordRelation.PATCH("/:id", handlers.UpdateRecordRelationHandler(recordRelationService, logger))
+		recordRelation.DELETE("/:id", handlers.DeleteRecordRelationHandler(recordRelationService, logger))
+	}
+
+	{
+		selectOptionRepo := postgres.NewPostgresSelectOptionRepo(db)
+		selectOptionService := service.NewSelectOptionService(selectOptionRepo)
+
+		selectOption := apiGroup.Group("/select_options")
+		selectOption.GET("/:id", handlers.GetSelectOptionByIDHandler(selectOptionService, logger))
+		selectOption.POST("/", handlers.CreateSelectOptionHandler(selectOptionService, logger))
+		selectOption.PATCH("/:id", handlers.UpdateSelectOptionHandler(selectOptionService, logger))
+		selectOption.DELETE("/:id", handlers.DeleteSelectOptionHandler(selectOptionService, logger))
 	}
 
 	if cfg.Mode == "release" {

@@ -3,7 +3,7 @@ package domain
 type RecordRelation struct {
 	ID             int64 `gorm:"primaryKey;autoIncrement" json:"id"`
 	FieldID        int64 `gorm:"index" json:"field_id"`
-	SourceRecordID int64 `gorm:"not null;index" json:"source_record_id"`
+	SourceRecordID int64 `gorm:"not null;index" json:""`
 	TargetRecordID int64 `gorm:"not null;index" json:"target_record_id"`
 
 	Field        *Field  `gorm:"foreignKey:FieldID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"field,omitempty"`

@@ -35,3 +35,12 @@ func (r *postgresSelectOptionRepo) Update(selectOption *domain.SelectOption) err
 func (r *postgresSelectOptionRepo) Delete(id int64) error {
 	return r.db.Delete(&domain.SelectOption{}, id).Error
 }
+
+func (r *postgresSelectOptionRepo) GetAllByFieldID(fieldID int64) ([]*domain.SelectOption, error) {
+	var selectOptions []*domain.SelectOption
+	err := r.db.Where("field_id = ?", fieldID).Find(&selectOptions).Error
+	if err != nil {
+		return nil, err
+	}
+	return selectOptions, nil
+}
