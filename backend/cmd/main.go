@@ -1,8 +1,8 @@
 package main
 
 import (
-	"dater/backend/internal/config"
-	"dater/backend/internal/server"
+	"clody/core/config"
+	"clody/core/server"
 	"fmt"
 )
 

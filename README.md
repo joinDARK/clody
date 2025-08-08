@@ -78,7 +78,7 @@ field.type = 'Many2Many', то cell.value = { "relation_ids": [1, 2, 3] }
 В handlers находятся обработчики запросов и будут использовать сервисы.
 
 ```
-internal/
+core/
 ├── server/           # Основной сервер
 ├── api/              # REST API слой
 │   ├── handlers/     # HTTP хендлеры

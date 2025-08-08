@@ -1,4 +1,4 @@
-module dater/backend
+module clody
 
 go 1.24.4
 
