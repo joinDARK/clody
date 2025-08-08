@@ -79,17 +79,49 @@ field.type = 'Many2Many', то cell.value = { "relation_ids": [1, 2, 3] }
 
 ```
 core/
-├── server/           # Основной сервер
-├── api/              # REST API слой
-│   ├── handlers/     # HTTP хендлеры
-│   ├── middleware/   # Middleware
-│   └── routes/       # Роутинг
-├── ws/               # WebSocket слой
-│   ├── hub/          # Управление соединениями
-│   ├── client/       # Клиентские соединения
-│   └── message/      # Сообщения и протокол
-├── service/          # Бизнес-логика
-├── repo/             # Работа с БД
-├── domain/           # Модели предметной области
-└── shared/           # Общие компоненты
+├── config
+│   └── config.go
+├── domain
+│   ├── base.go
+│   ├── cell.go
+│   ├── field.go
+│   ├── record.go
+│   ├── record_relation.go
+│   ├── select_option.go
+│   └── table.go
+├── repo
+│   ├── interface.go
+│   └── postgres
+│       ├── base_repo.go
+│       ├── cell_repo.go
+│       ├── field_repo.go
+│       ├── record_relation_repo.go
+│       ├── record_repo.go
+│       ├── select_option_repo.go
+│       └── table_repo.go
+├── server
+│   ├── db.go
+│   ├── logger.go
+│   └── server.go
+├── service
+│   ├── base_service.go
+│   ├── cell_service.go
+│   ├── field_service.go
+│   ├── record_relation_service.go
+│   ├── record_service.go
+│   ├── select_option_service.go
+│   └── table_service.go
+└── transport
+    ├── api
+    │   ├── handlers
+    │   │   ├── base_handler.go
+    │   │   ├── cell_handler.go
+    │   │   ├── field_handler.go
+    │   │   ├── record_handler.go
+    │   │   ├── record_relation_handler.go
+    │   │   ├── select_option_handler.go
+    │   │   └── table_handler.go
+    │   ├── middleware.go
+    │   └── router.go
+    └── ws
 ```
