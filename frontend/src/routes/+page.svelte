@@ -1,12 +1,12 @@
 <script lang="ts">
-    import type { PageProps } from "./$types";
     import Button from "$lib/Button.svelte";
     import Header from "$lib/Header.svelte";
     import Sidebar from "$lib/Sidebar.svelte";
+    import type { IBaseApi } from "../../share/interfaces/api";
 
     console.log("Hello, SvelteKit!");
 
-    let { data }: PageProps = $props();
+    let { data }: { data: IBaseApi } = $props();
 </script>
 
 <div class="screen__grid p-3">
@@ -17,15 +17,19 @@
         </Header>
     </div>
     <div class="flex gap-3">
-        <Sidebar title="Тестовая БД">
-            <Button small>Таблица 1</Button>
-            <Button small color="neutral">Таблица 2</Button>
+        <Sidebar title={data.data.name}>
+            <!-- <Button small>Таблица 1</Button>
+            <Button small color="neutral">Таблица 2</Button> -->
+            {#if data.data.tables != undefined && data.data != undefined}
+                {#each data.data.tables as table}
+                    <Button small color="neutral">{table.name}</Button>
+                {/each}
+            {/if}
         </Sidebar>
         <div class="py-3 pr-3 w-full">
-            <h1 class="text-6xl font-bold text-blue-500 font-sans">
+            <h1 class="text-6xl font-bold text-primary font-sans">
                 Welcome to Dater
             </h1>
-            <div class="text-white">{@html data?.message}</div>
         </div>
     </div>
 </div>

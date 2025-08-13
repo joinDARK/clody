@@ -28,11 +28,11 @@
     }
 
     .btn_primary {
-        background-color: oklch(62.3% 0.214 259.815);
+        background-color: var(--color-secondary);
         color: #fff;
     }
     .btn_primary:hover {
-        background-color: oklch(54.6% 0.245 262.881);
+        background-color: var(--color-secondary-hover);
     }
     .btn_primary:active {
         transform: scale(0.97);

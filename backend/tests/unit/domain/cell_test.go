@@ -1,33 +1,21 @@
 package domain_test
 
 import (
-	"encoding/json"
 	"testing"
 	"time"
 
 	"clody/core/domain"
+	"clody/utils"
 
 	"github.com/stretchr/testify/assert"
 	"gorm.io/datatypes"
 )
 
-// Вспомогательная функция для создания datatypes.JSON
-func createJSONFromString(t *testing.T, jsonString string) datatypes.JSON {
-	var jsonData any
-	err := json.Unmarshal([]byte(jsonString), &jsonData)
-	assert.NoError(t, err, "Should unmarshal JSON string without error")
-
-	jsonBytes, err := json.Marshal(jsonData)
-	assert.NoError(t, err, "Should marshal JSON data without error")
-
-	return datatypes.JSON(jsonBytes)
-}
-
 // ПОЗИТИВНЫЕ ТЕСТЫ - тестирование нормальных сценариев
 func TestCellStruct_Positive(t *testing.T) {
 	t.Run("Cell struct creation with valid data", func(t *testing.T) {
 		// Arrange
-		jsonValue := createJSONFromString(t, `{"text": "test value"}`)
+		jsonValue := utils.CreateJSONFromString(t, `{"text": "test value"}`)
 
 		cell := &domain.Cell{
 			ID:        1,
@@ -74,7 +62,7 @@ func TestCellStruct_Positive(t *testing.T) {
 
 		for _, tc := range testCases {
 			t.Run(tc.name, func(t *testing.T) {
-				jsonValue := createJSONFromString(t, tc.jsonStr)
+				jsonValue := utils.CreateJSONFromString(t, tc.jsonStr)
 
 				cell := &domain.Cell{
 					ID:        2,
@@ -93,7 +81,7 @@ func TestCellStruct_Positive(t *testing.T) {
 
 	t.Run("Cell with relations", func(t *testing.T) {
 		// Arrange
-		jsonValue := createJSONFromString(t, `{"data": "test"}`)
+		jsonValue := utils.CreateJSONFromString(t, `{"data": "test"}`)
 		field := &domain.Field{ID: 100, Name: "Test Field"}
 		record := &domain.Record{ID: 200, TableID: 1}
 
@@ -121,7 +109,7 @@ func TestCellStruct_Positive(t *testing.T) {
 func TestCellStruct_Negative(t *testing.T) {
 	t.Run("Cell with zero values", func(t *testing.T) {
 		// Arrange
-		jsonValue := createJSONFromString(t, `{}`)
+		jsonValue := utils.CreateJSONFromString(t, `{}`)
 
 		cell := &domain.Cell{
 			ID:        0,
@@ -143,7 +131,7 @@ func TestCellStruct_Negative(t *testing.T) {
 
 	t.Run("Cell with negative position", func(t *testing.T) {
 		// Arrange
-		jsonValue := createJSONFromString(t, `{"negative": true}`)
+		jsonValue := utils.CreateJSONFromString(t, `{"negative": true}`)
 
 		cell := &domain.Cell{
 			ID:        4,
@@ -161,7 +149,7 @@ func TestCellStruct_Negative(t *testing.T) {
 
 	t.Run("Cell with nil relations", func(t *testing.T) {
 		// Arrange
-		jsonValue := createJSONFromString(t, `{"nil_relations": true}`)
+		jsonValue := utils.CreateJSONFromString(t, `{"nil_relations": true}`)
 
 		cell := &domain.Cell{
 			ID:        5,
@@ -182,7 +170,7 @@ func TestCellStruct_Negative(t *testing.T) {
 
 	t.Run("Cell with empty JSON", func(t *testing.T) {
 		// Arrange
-		jsonValue := createJSONFromString(t, `{}`)
+		jsonValue := utils.CreateJSONFromString(t, `{}`)
 
 		cell := &domain.Cell{
 			ID:        6,
@@ -203,7 +191,7 @@ func TestCellStruct_Negative(t *testing.T) {
 func TestCellStruct_Boundary(t *testing.T) {
 	t.Run("Cell with maximum int64 values", func(t *testing.T) {
 		// Arrange
-		jsonValue := createJSONFromString(t, `{"max_values": true}`)
+		jsonValue := utils.CreateJSONFromString(t, `{"max_values": true}`)
 
 		cell := &domain.Cell{
 			ID:        9223372036854775807, // math.MaxInt64
@@ -224,7 +212,7 @@ func TestCellStruct_Boundary(t *testing.T) {
 
 	t.Run("Cell with minimum int64 values", func(t *testing.T) {
 		// Arrange
-		jsonValue := createJSONFromString(t, `{"min_values": true}`)
+		jsonValue := utils.CreateJSONFromString(t, `{"min_values": true}`)
 
 		cell := &domain.Cell{
 			ID:        -9223372036854775808, // math.MinInt64
@@ -256,7 +244,7 @@ func TestCellStruct_Boundary(t *testing.T) {
 			"simple": "value"
 		}`
 
-		jsonValue := createJSONFromString(t, complexJSON)
+		jsonValue := utils.CreateJSONFromString(t, complexJSON)
 
 		cell := &domain.Cell{
 			ID:        7,
@@ -277,7 +265,7 @@ func TestCellStruct_Boundary(t *testing.T) {
 func TestCellStruct_SpecialCases(t *testing.T) {
 	t.Run("Cell with same FieldID and RecordID", func(t *testing.T) {
 		// Arrange
-		jsonValue := createJSONFromString(t, `{"same_ids": true}`)
+		jsonValue := utils.CreateJSONFromString(t, `{"same_ids": true}`)
 
 		cell := &domain.Cell{
 			ID:        8,
