@@ -20,6 +20,11 @@ export interface ILinksApi {
 }
 
 export interface IBaseApi {
-    _links: ILinksApi
-    data: IBase
+    _links: ILinksApi;
+    data: IBase;
+}
+
+export interface ITableApi {
+    _links: ILinksApi;
+    data: IBase;
 }

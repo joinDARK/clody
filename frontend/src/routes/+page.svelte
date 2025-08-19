@@ -2,6 +2,7 @@
     import Button from "$lib/Button.svelte";
     import Header from "$lib/Header.svelte";
     import Sidebar from "$lib/Sidebar.svelte";
+    import Link from "$lib/Link.svelte";
     import type { IBaseApi } from "../../share/interfaces/api";
 
     console.log("Hello, SvelteKit!");
@@ -22,7 +23,11 @@
             <Button small color="neutral">Таблица 2</Button> -->
             {#if data.data.tables != undefined && data.data != undefined}
                 {#each data.data.tables as table}
-                    <Button small color="neutral">{table.name}</Button>
+                    <Link
+                        isButton
+                        lable={table.name}
+                        link={`/table/${table.id}`}
+                    />
                 {/each}
             {/if}
         </Sidebar>
