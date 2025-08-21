@@ -4,15 +4,18 @@
     interface Props {
         title?: string;
         children: Snippet;
+        spaceBetween?: boolean;
     }
 
-    let { children, title = "Шапка" }: Props = $props();
+    let { children, title = "Шапка", spaceBetween = false }: Props = $props();
 </script>
 
 <div class="h-full flex">
     <div class="header px-4">
-        <div class="text-white font-bold">{title}</div>
-        {@render children()}
+        <div class="text-white font-bold w-fit">{title}</div>
+        <div class={`${spaceBetween ? "flex justify-between flex-1" : ""}`}>
+            {@render children()}
+        </div>
     </div>
 </div>
 

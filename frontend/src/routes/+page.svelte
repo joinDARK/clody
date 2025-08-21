@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Button from "$lib/Button.svelte";
+    // import Button from "$lib/Button.svelte";
     import Header from "$lib/Header.svelte";
     import Sidebar from "$lib/Sidebar.svelte";
     import Link from "$lib/Link.svelte";
@@ -8,24 +8,24 @@
     console.log("Hello, SvelteKit!");
 
     let { data }: { data: IBaseApi } = $props();
+    const { tables, name } = data.data;
 </script>
 
 <div class="screen__grid p-3">
     <div>
         <Header>
-            <Button small>Табличный вид</Button>
-            <Button small>Интерфейс</Button>
+            ds
         </Header>
     </div>
     <div class="flex gap-3">
-        <Sidebar title={data.data.name}>
+        <Sidebar title={name}>
             <!-- <Button small>Таблица 1</Button>
             <Button small color="neutral">Таблица 2</Button> -->
-            {#if data.data.tables != undefined && data.data != undefined}
-                {#each data.data.tables as table}
+            {#if tables != undefined && data != undefined}
+                {#each tables as table}
                     <Link
                         isButton
-                        lable={table.name}
+                        label={table.name}
                         link={`/table/${table.id}`}
                     />
                 {/each}

@@ -2,14 +2,15 @@
     interface Props {
         isButton?: boolean;
         link?: string;
-        lable?: string;
+        label?: string;
+        small?: boolean;
     }
 
-    let { isButton = false, link = "#", lable = "" }: Props = $props();
+    let { isButton = false, link = "#", label = "", small = false }: Props = $props();
 </script>
 
-<a href={link} class={`${isButton ? "btn btn_primary" : ""}`}>
-    {lable}
+<a href={link} class={`${isButton ? "btn btn_primary" : ""} ${small ? 'text-sm' : ''}`} data-sveltekit-preload-data="false">
+    {label}
 </a>
 
 <style>

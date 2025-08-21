@@ -1,4 +1,5 @@
 import type { IBase } from "./base";
+import type { ITable } from "./table";
 
 export interface ILinksApi {
     create: {
@@ -26,5 +27,5 @@ export interface IBaseApi {
 
 export interface ITableApi {
     _links: ILinksApi;
-    data: IBase;
+    data: ITable;
 }
