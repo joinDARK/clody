@@ -9,23 +9,6 @@
     console.log("Hello, SvelteKit!");
 
     let { data }: { data: ITableApi } = $props();
-
-    const columns = [
-        {
-            id: "id",
-            title: "№",
-            data: ["1", "2", "3"],
-        },
-        {
-            id: "name",
-            title: "Имя",
-            data: [
-                "Иван",
-                "Петр",
-                "Сергей",
-            ],
-        },
-    ];
 </script>
 
 <div class="screen__grid p-3">
@@ -40,7 +23,7 @@
     </div>
     <div class="flex gap-3">
         <div class="py-3 w-full">
-            <Table columns={columns}/>
+            <Table/>
         </div>
     </div>
 </div>
