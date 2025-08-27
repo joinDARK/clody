@@ -3,7 +3,7 @@
     import Header from "$lib/Header.svelte";
     import Sidebar from "$lib/Sidebar.svelte";
     import Link from "$lib/Link.svelte";
-    import type { IBaseApi } from "../../share/interfaces/api";
+    import type { IBaseApi } from "@share/interfaces/api";
 
     console.log("Hello, SvelteKit!");
 
