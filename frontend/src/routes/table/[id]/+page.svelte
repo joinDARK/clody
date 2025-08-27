@@ -30,9 +30,6 @@
 
 <style>
     .screen__grid {
-        display: grid;
-        grid-template-rows: 50px 1fr;
         height: inherit;
-        gap: 0.75rem;
     }
 </style>
